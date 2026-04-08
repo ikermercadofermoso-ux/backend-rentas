@@ -1,0 +1,76 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "654321",
+      "role": "admin",
+      "nombre": "Administrador"
+    },
+    {
+      "id": 2,
+      "username": "empleado",
+      "password": "123456",
+      "role": "empleado",
+      "nombre": "Empleado"
+    }
+  ],
+  "autos": [
+    {
+      "id": 1775607536188,
+      "name": "nissan 24",
+      "brand": "nissan",
+      "model": "2024",
+      "plates": "A45-KJH",
+      "color": "azul",
+      "dailyRate": 800,
+      "currentMileage": 3,
+      "status": "available"
+    }
+  ],
+  "contratos": [
+    {
+      "id": 1775607634968,
+      "clientName": "IKER",
+      "clientRFC": "XOXOXOOXOXOXO",
+      "clientAddress": "SN",
+      "clientPhone": "5539078219",
+      "clientEmail": "IKER@GMAIL.COM",
+      "clientLicense": "131432434",
+      "startDate": "2026-04-17",
+      "startTime": "09:00",
+      "endDate": "2026-04-15",
+      "endTime": "09:00",
+      "totalDays": 1,
+      "vehicleId": 1775607536188,
+      "vehiclePlates": "A45-KJH",
+      "vehicleBrand": "nissan",
+      "vehicleModel": "2024",
+      "vehicleColor": "azul",
+      "dailyRate": 800,
+      "kmStart": 598,
+      "deposit": 10000,
+      "ivaOption": "without",
+      "subtotal": 800,
+      "iva": 0,
+      "total": 10800,
+      "createdAt": "2026-04-08T00:20:34.968Z",
+      "status": "completed"
+    }
+  ],
+  "clientes": [],
+  "tokens": [
+    {
+      "token": "0487b80e-80e0-4e4a-b17a-145d0bd932b5",
+      "userId": 2
+    },
+    {
+      "token": "d9f168b3-cca5-4ef1-9752-80a62cf619be",
+      "userId": 1
+    },
+    {
+      "token": "b3dc3712-e2e8-4948-b508-87153c66db77",
+      "userId": 2
+    }
+  ]
+}
