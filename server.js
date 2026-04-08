@@ -3,6 +3,16 @@ console.log("🔥 SERVER REAL FUNCIONANDO 🔥");
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const mongoose = require('mongoose');
+
+// 🔥 CONEXIÓN A MONGODB
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("🔥 MongoDB conectado");
+    })
+    .catch(err => {
+        console.error("❌ Error Mongo:", err.message);
+    });
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { PDFDocument, StandardFonts } = require('pdf-lib');
