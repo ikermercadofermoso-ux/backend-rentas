@@ -4,15 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const mongoose = require('mongoose');
-
-// 🔥 CONEXIÓN A MONGODB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("🔥 MongoDB conectado");
-    })
-    .catch(err => {
-        console.error("❌ Error Mongo:", err.message);
-    });
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { PDFDocument, StandardFonts } = require('pdf-lib');
@@ -21,12 +12,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ============================================
-// 🔥 MONGODB CONNECTION
+// 🔥 CONEXIÓN A MONGODB (SOLO UNA VEZ)
 // ============================================
 
-mongoose.connect('mongodb+srv://ikermercadofermoso_db_user:MsTS4ouERfWGQqxf@cluster0.wb1roef.mongodb.net/rentas')
-  .then(() => console.log('🔥 MongoDB conectado'))
-  .catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("🔥 MongoDB conectado");
+    })
+    .catch(err => {
+        console.error("❌ Error Mongo:", err.message);
+    });
 
 // ============================================
 // MODELOS
@@ -47,7 +42,6 @@ const Auto = mongoose.model('Auto', new mongoose.Schema({
 }));
 
 const Contrato = mongoose.model('Contrato', new mongoose.Schema({
-    ...{},
     createdAt: String,
     status: String,
     total: Number
@@ -69,7 +63,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================
-// INIT USERS (solo si no existen)
+// INIT USERS
 // ============================================
 
 async function initUsers() {
@@ -158,8 +152,7 @@ app.get('/test', (req, res) => {
 // ============================================
 
 app.get('/autos', authMiddleware, async (req, res) => {
-    const autos = await Auto.find();
-    res.json(autos);
+    res.json(await Auto.find());
 });
 
 app.post('/autos', authMiddleware, async (req, res) => {
@@ -185,113 +178,6 @@ app.put('/autos/:id', authMiddleware, async (req, res) => {
 app.delete('/autos/:id', authMiddleware, async (req, res) => {
     await Auto.findByIdAndDelete(req.params.id);
     res.json({ success: true });
-});
-
-// ============================================
-// CONTRATOS
-// ============================================
-
-app.get('/contratos', authMiddleware, async (req, res) => {
-    const contratos = await Contrato.find();
-    res.json(contratos);
-});
-
-app.post('/contratos', authMiddleware, async (req, res) => {
-    const newContract = await Contrato.create({
-        ...req.body,
-        createdAt: new Date().toISOString()
-    });
-
-    res.status(201).json(newContract);
-});
-
-app.put('/contratos/:id/status', authMiddleware, async (req, res) => {
-    const contract = await Contrato.findById(req.params.id);
-
-    if (!contract) return res.status(404).json({ error: 'No encontrado' });
-
-    contract.status = req.body.status;
-    await contract.save();
-
-    res.json(contract);
-});
-
-// ============================================
-// CLIENTES
-// ============================================
-
-app.get('/clientes', authMiddleware, async (req, res) => {
-    const clientes = await Cliente.find();
-    res.json(clientes);
-});
-
-// ============================================
-// STATS
-// ============================================
-
-app.get('/stats', authMiddleware, async (req, res) => {
-    const autos = await Auto.find();
-    const contratos = await Contrato.find();
-    const clientes = await Cliente.find();
-
-    res.json({
-        totalVehiculos: autos.length,
-        vehiculosDisponibles: autos.filter(v => v.status === 'available').length,
-        vehiculosRentados: autos.filter(v => v.status === 'rented').length,
-        totalContratos: contratos.length,
-        contratosActivos: contratos.filter(c => c.status === 'active').length,
-        totalClientes: clientes.length,
-        ingresosTotales: contratos.reduce((sum, c) => sum + (c.total || 0), 0)
-    });
-});
-
-// ============================================
-// PDF
-// ============================================
-
-const CONTRACTS_DIR = path.join(__dirname, 'contracts');
-if (!fs.existsSync(CONTRACTS_DIR)) fs.mkdirSync(CONTRACTS_DIR, { recursive: true });
-
-app.post('/generate-contract-pdf', authMiddleware, async (req, res) => {
-    try {
-        const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage();
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-        page.drawText(`Cliente: ${req.body.clientName}`, { x: 50, y: 700, size: 12, font });
-        page.drawText(`Placas: ${req.body.vehiclePlates}`, { x: 50, y: 680, size: 12, font });
-
-        const pdfBytes = await pdfDoc.save();
-
-        const filename = `Contrato_${Date.now()}.pdf`;
-        const filepath = path.join(CONTRACTS_DIR, filename);
-
-        fs.writeFileSync(filepath, pdfBytes);
-
-        res.json({ url: `/contracts/${filename}` });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error generando PDF' });
-    }
-});
-
-app.get('/contracts/:file', authMiddleware, (req, res) => {
-    const file = path.join(CONTRACTS_DIR, req.params.file);
-
-    if (!fs.existsSync(file)) {
-        return res.status(404).send('No encontrado');
-    }
-
-    res.sendFile(file);
-});
-
-// ============================================
-// ROOT
-// ============================================
-
-app.get('/', (req, res) => {
-    res.send('🚀 Backend de CRONIC con MongoDB funcionando');
 });
 
 // ============================================
