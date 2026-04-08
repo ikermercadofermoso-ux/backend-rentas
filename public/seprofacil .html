@@ -1,0 +1,2898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗 SISTEMA DE RENTAS - AUTO RENT</title>
+    
+    <style>
+        /* ESTILOS COMPLETOS CON COLORES */
+        :root {
+            --primary: #1a56db;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e40af;
+            --success: #0e9f6e;
+            --success-light: #10b981;
+            --warning: #f05252;
+            --warning-light: #f87171;
+            --danger: #c81e1e;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+        
+        /* PANTALLA DE LOGIN */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(26, 86, 219, 0.3);
+        }
+        
+        .login-icon span {
+            font-size: 40px;
+        }
+        
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .login-form {
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 86, 219, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .login-info {
+            text-align: center;
+            font-size: 13px;
+            color: var(--gray);
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-light);
+        }
+        
+        .login-info p {
+            margin: 5px 0;
+        }
+        
+        .login-info strong {
+            color: var(--primary);
+        }
+        
+        /* APP PRINCIPAL (inicialmente oculta) */
+        .app-main {
+            display: none;
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            min-height: 90vh;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success), var(--primary-light));
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .user-info {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+        
+        .user-role {
+            background: rgba(255,255,255,0.25);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .user-role.admin {
+            background: #f59e0b;
+            color: #1f2937;
+        }
+        
+        .user-role.empleado {
+            background: #10b981;
+            color: white;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .logo h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .logo .subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        /* MENÚ PRINCIPAL */
+        .main-menu {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: var(--light);
+        }
+        
+        .menu-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 2px solid var(--gray-light);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+        }
+        
+        .menu-card:hover::before {
+            transform: translateY(0);
+        }
+        
+        .menu-card:active {
+            transform: scale(0.98);
+        }
+        
+        .menu-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+        }
+        
+        .menu-icon {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .menu-card:hover .menu-icon {
+            transform: scale(1.1);
+        }
+        
+        .menu-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .menu-desc {
+            font-size: 0.8em;
+            color: var(--gray);
+        }
+        
+        /* PÁGINAS */
+        .page {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .page.active {
+            display: block !important;
+        }
+        
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-light);
+            flex-wrap: wrap;
+        }
+        
+        .back-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateX(-2px);
+        }
+        
+        .page-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--dark);
+            flex: 1;
+        }
+        
+        /* FORMULARIOS */
+        .form-section {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-section:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .main-menu { grid-template-columns: 1fr; }
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95em;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray-light);
+        }
+        
+        .modal-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--warning);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* BOTONES */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 159, 110, 0.4);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 86, 219, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), var(--warning-light));
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 82, 82, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #b91c1c);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* RESUMEN */
+        .summary-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #dbeafe;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .summary-label {
+            font-size: 0.9em;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .summary-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .summary-total {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--success);
+            text-align: center;
+            padding-top: 15px;
+            border-top: 2px solid #dbeafe;
+            margin-top: 15px;
+        }
+        
+        /* ALERTAS */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        /* CLIENTES Y VEHÍCULOS */
+        .client-card, .vehicle-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid var(--gray-light);
+            transition: all 0.3s;
+        }
+        
+        .client-card:hover, .vehicle-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .client-header, .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .client-name, .vehicle-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .vehicle-plates {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+        
+        .vehicle-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-group {
+            background: var(--light);
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .info-label {
+            font-size: 0.8em;
+            color: var(--gray);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .info-value {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        /* ACCESORIOS */
+        .accessories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid var(--gray-light);
+        }
+        
+        .accessory-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .accessory-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+        
+        /* BOTONES DE ADMIN (ocultos para empleados) */
+        .admin-only {
+            display: inline-flex;
+        }
+        
+        .admin-only.hidden {
+            display: none;
+        }
+        
+        /* LOADING */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--light);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-info {
+                justify-content: center;
+            }
+        }
+        
+        /* IMPRESIÓN */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .printable-contract, .printable-contract * {
+                visibility: visible;
+            }
+            .printable-contract {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        .print-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .print-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .print-controls {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px;
+            border-top: 2px solid var(--gray-light);
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        /* SEARCH */
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            font-size: 1em;
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .filter-select {
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            background: white;
+            min-width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <!-- PANTALLA DE LOGIN -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <span>🚗</span>
+                </div>
+                <h1 class="login-title">Auto Rent</h1>
+                <p class="login-subtitle">Sistema de Administración de Renta de Vehículos</p>
+            </div>
+            
+            <div class="login-error" id="loginError">
+                <span>⚠️</span> <span id="errorMessage">Usuario o contraseña incorrectos</span>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <label>👤 Usuario</label>
+                    <input type="text" id="loginUsername" placeholder="Ingresa tu usuario" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>🔒 Contraseña</label>
+                    <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña" required>
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span>🔐</span> INICIAR SESIÓN
+                </button>
+            </form>
+            
+            <div class="login-info">
+                <p>📋 <strong>USUARIOS DE PRUEBA</strong></p>
+                <p>👑 <strong>admin</strong> / 654321 (Acceso total)</p>
+                <p>👤 <strong>empleado</strong> / 123456 (Solo lectura y creación)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL (oculta hasta login) -->
+    <div class="app-main" id="appMain">
+        <header class="app-header">
+            <div class="header-top">
+                <div class="logo">
+                    <h1>🚗 SISTEMA DE RENTAS</h1>
+                    <div class="subtitle">Administración de Flotilla Vehicular</div>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <span>👤 <span id="userName"></span></span>
+                    <span class="user-role" id="userRole"></span>
+                    <button class="logout-btn" id="logoutBtn">
+                        <span>🚪</span> CERRAR SESIÓN
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MENÚ PRINCIPAL -->
+        <div class="main-menu" id="mainMenu">
+            <div class="menu-card" data-page="contracts">
+                <div class="menu-icon">📝</div>
+                <div class="menu-title">Nuevo Contrato</div>
+                <div class="menu-desc">Crear contrato de renta</div>
+            </div>
+            
+            <div class="menu-card" data-page="history">
+                <div class="menu-icon">📊</div>
+                <div class="menu-title">Historial</div>
+                <div class="menu-desc">Ver contratos activos</div>
+            </div>
+            
+            <div class="menu-card" data-page="vehicles">
+                <div class="menu-icon">🚗</div>
+                <div class="menu-title">Vehículos</div>
+                <div class="menu-desc">Base de datos completa</div>
+            </div>
+            
+            <div class="menu-card" data-page="print">
+                <div class="menu-icon">🖨️</div>
+                <div class="menu-title">Imprimir</div>
+                <div class="menu-desc">Contratos listos para firmar</div>
+            </div>
+            
+            <div class="menu-card" data-page="clients">
+                <div class="menu-icon">👥</div>
+                <div class="menu-title">Clientes</div>
+                <div class="menu-desc">Base de datos completa</div>
+            </div>
+            
+            <div class="menu-card" data-page="reports">
+                <div class="menu-icon">📈</div>
+                <div class="menu-title">Reportes</div>
+                <div class="menu-desc">Estadísticas completas</div>
+            </div>
+        </div>
+
+        <!-- PÁGINA: CONTRATOS -->
+        <div class="page" id="contractsPage">
+            <div class="page-header">
+                <button class="back-btn">←</button>
+                <h2 class="page-title">📝 Nuevo Contrato de Renta</h2>
+                <div style="font-size: 0.8em; background: #f0f9ff; padding: 5px 12px; border-radius: 20px;">
+                    💰 <span id="totalCalculado">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="alert" id="contractAlert"></div>
+            
+            <!-- DATOS DEL CLIENTE -->
+            <div class="form-section">
+                <h3 class="section-title">👤 DATOS DEL CLIENTE</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nombre / Razón Social</label>
+                        <input type="text" id="clientName" class="form-input" placeholder="Nombre completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RFC</label>
+                        <input type="text" id="clientRFC" class="form-input" placeholder="XAXX010101000" maxlength="13" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Domicilio</label>
+                        <input type="text" id="clientAddress" class="form-input" placeholder="Calle, número, colonia" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" id="clientPhone" class="form-input" placeholder="55-1234-5678" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" id="clientEmail" class="form-input" placeholder="cliente@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">No. Licencia</label>
+                        <input type="text" id="clientLicense" class="form-input" placeholder="Número de licencia" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PERIODO DE RENTA -->
+            <div class="form-section">
+                <h3 class="section-title">📅 PERIODO DE RENTA</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Inicio</label>
+                        <input type="date" id="startDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora de Entrega</label>
+                        <input type="time" id="startTime" class="form-input" value="09:00" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Término</label>
+                        <input type="date" id="endDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora de Devolución</label>
+                        <input type="time" id="endTime" class="form-input" value="09:00" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Total Días</label>
+                        <input type="number" id="totalDays" class="form-input" readonly style="background: #f0f0f0;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Depósito de Garantía</label>
+                        <input type="number" id="cashDeposit" class="form-input" value="500" min="0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VEHÍCULO -->
+            <div class="form-section">
+                <h3 class="section-title">🚗 VEHÍCULO</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Seleccionar Vehículo</label>
+                        <select id="vehicleSelect" class="form-select" required>
+                            <option value="">Seleccionar vehículo...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Placas</label>
+                        <input type="text" id="vehiclePlates" class="form-input" readonly style="background: #f0f9ff;">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Marca</label>
+                        <input type="text" id="vehicleBrand" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Modelo / Año</label>
+                        <input type="text" id="vehicleModel" class="form-input" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <input type="text" id="vehicleColor" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tarifa por Día</label>
+                        <input type="number" id="dailyRate" class="form-input" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Kilometraje Inicial</label>
+                        <input type="number" id="kmStart" class="form-input" value="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">IVA</label>
+                        <select id="ivaOption" class="form-select">
+                            <option value="with">Con IVA (16%)</option>
+                            <option value="without">Sin IVA</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RESUMEN -->
+            <div class="summary-card">
+                <h3 class="section-title">💰 RESUMEN DEL CONTRATO</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Subtotal Renta</div>
+                        <div class="summary-value" id="summaryRent">$0.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">IVA (16%)</div>
+                        <div class="summary-value" id="summaryIVA">$0.00</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Depósito de Garantía</div>
+                        <div class="summary-value" id="summaryDeposit">$500.00</div>
+                    </div>
+                </div>
+                <div class="summary-total" id="summaryTotal">TOTAL: $0.00</div>
+            </div>
+            
+            <button class="btn btn-success" id="saveContractBtn" style="width: 100%;">
+                💾 GUARDAR CONTRATO
+            </button>
+        </div>
+
+        <!-- PÁGINA: VEHÍCULOS -->
+        <div class="page" id="vehiclesPage">
+            <div class="page-header">
+                <button class="back-btn">←</button>
+                <h2 class="page-title">🚗 Administración de Vehículos</h2>
+                <button class="btn btn-primary admin-only" id="createVehicleBtn" style="padding: 10px 16px;">
+                    ➕ NUEVO VEHÍCULO
+                </button>
+            </div>
+            
+            <div class="form-section">
+                <div class="search-container">
+                    <input type="text" id="searchVehicle" class="search-input" placeholder="Buscar por placas, marca o modelo...">
+                    <select id="filterStatus" class="filter-select">
+                        <option value="all">Todos los estados</option>
+                        <option value="available">🟢 Disponible</option>
+                        <option value="rented">🔴 Rentado</option>
+                    </select>
+                    <button class="btn btn-primary" id="searchVehicleBtn">🔍 BUSCAR</button>
+                </div>
+            </div>
+            
+            <div id="vehiclesList">
+                <div style="text-align: center; padding: 40px;">
+                    <div class="loading"></div>
+                    <p>Cargando vehículos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PÁGINA: HISTORIAL -->
+        <div class="page" id="historyPage">
+            <div class="page-header">
+                <button class="back-btn">←</button>
+                <h2 class="page-title">📊 Historial de Contratos</h2>
+            </div>
+            
+            <div class="form-section">
+                <div class="search-container">
+                    <input type="text" id="searchHistory" class="search-input" placeholder="Buscar por cliente o vehículo...">
+                    <select id="filterHistory" class="filter-select">
+                        <option value="all">Todos</option>
+                        <option value="active">Activos</option>
+                        <option value="completed">Completados</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="historyContent"></div>
+        </div>
+
+        <!-- PÁGINA: IMPRIMIR -->
+        <div class="page" id="printPage">
+            <div class="page-header">
+                <button class="back-btn">←</button>
+                <h2 class="page-title">🖨️ Imprimir Contratos</h2>
+            </div>
+            
+            <div class="form-section">
+                <input type="text" id="searchPrint" class="search-input" placeholder="Buscar contrato..." style="width: 100%;">
+            </div>
+            
+            <div id="printContractsList"></div>
+        </div>
+
+        <!-- PÁGINA: CLIENTES -->
+        <div class="page" id="clientsPage">
+            <div class="page-header">
+                <button class="back-btn">←</button>
+                <h2 class="page-title">👥 Base de Datos de Clientes</h2>
+            </div>
+            
+            <div class="form-section">
+                <input type="text" id="searchClient" class="search-input" placeholder="Buscar por nombre, RFC o teléfono..." style="width: 100%;">
+            </div>
+            
+            <div id="clientsContent"></div>
+        </div>
+
+        <!-- PÁGINA: REPORTES -->
+        <div class="page" id="reportsPage">
+            <div class="page-header">
+                <button class="back-btn">←</button>
+                <h2 class="page-title">📈 Reportes y Estadísticas</h2>
+            </div>
+            
+            <div class="form-section">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Total Vehículos</div>
+                        <div class="summary-value" id="statsTotalVehicles">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Disponibles</div>
+                        <div class="summary-value" id="statsAvailableVehicles">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Rentados</div>
+                        <div class="summary-value" id="statsRentedVehicles">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Contratos</div>
+                        <div class="summary-value" id="statsTotalContracts">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Contratos Activos</div>
+                        <div class="summary-value" id="statsActiveContracts">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Clientes</div>
+                        <div class="summary-value" id="statsTotalClients">0</div>
+                    </div>
+                </div>
+                <div class="summary-total" id="statsTotalIncome">INGRESOS TOTALES: $0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA CREAR VEHÍCULO (SOLO ADMIN) -->
+    <div id="createVehicleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🚗 Registrar Nuevo Vehículo</h3>
+                <button class="close-modal" onclick="closeCreateVehicleModal()">×</button>
+            </div>
+            
+            <div id="modalAlert" class="alert"></div>
+            
+            <div class="form-group">
+                <label class="form-label">Nombre del Vehículo *</label>
+                <input type="text" id="newVehicleName" class="form-input" placeholder="Ej: Nissan Versa 2024">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Marca *</label>
+                    <input type="text" id="newVehicleBrand" class="form-input" placeholder="Ej: Nissan">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modelo/Año *</label>
+                    <input type="text" id="newVehicleModel" class="form-input" placeholder="Ej: 2024">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Placas *</label>
+                    <input type="text" id="newVehiclePlates" class="form-input" placeholder="Ej: ABC-1234">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Color *</label>
+                    <input type="text" id="newVehicleColor" class="form-input" placeholder="Ej: Rojo">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Tarifa por Día</label>
+                    <input type="number" id="newVehicleDailyRate" class="form-input" value="800" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kilometraje Actual</label>
+                    <input type="number" id="newVehicleMileage" class="form-input" value="0" min="0">
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" id="confirmCreateVehicleBtn" style="flex: 1;">
+                    💾 GUARDAR VEHÍCULO
+                </button>
+                <button class="btn btn-warning" onclick="closeCreateVehicleModal()" style="flex: 1;">
+                    ❌ CANCELAR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURACIÓN GLOBAL
+        // ============================================
+        const API_URL = "https://backend-rentas-wb73.onrender.com";    
+        // Estado de la aplicación
+        let currentUser = null;
+        let authToken = null;
+        
+        // Datos del sistema
+        let vehicles = [];
+        let contracts = [];
+        let clients = [];
+        
+        // ============================================
+        // FUNCIONES DE AUTENTICACIÓN (CORREGIDAS)
+        // ============================================
+        
+        async function login(username, password) {
+            if (!username || !password) {
+                return { success: false, error: 'Usuario y contraseña requeridos' };
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    return { success: false, error: data.error || 'Credenciales inválidas' };
+                }
+
+                if (data.success && data.token && data.usuario) {
+                    authToken = data.token;
+                    currentUser = data.usuario;
+
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    return { success: true };
+                } else {
+                    return { success: false, error: 'Respuesta inválida del servidor' };
+                }          
+            } catch (error) {
+                console.error('❌ Error en login:', error);
+                return { success: false, error: 'Error de conexión con el servidor' };
+            }
+        }
+        
+        function logout() {
+            // Limpiar variables globales
+            currentUser = null;
+            authToken = null;
+            
+            // Limpiar localStorage COMPLETAMENTE
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            
+            // Limpiar sessionStorage por si acaso
+            sessionStorage.clear();
+            
+            // Limpiar el formulario de login
+            const usernameInput = document.getElementById('loginUsername');
+            const passwordInput = document.getElementById('loginPassword');
+            if (usernameInput) usernameInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+            
+            const loginError = document.getElementById('loginError');
+            if (loginError) loginError.style.display = 'none';
+            
+            // Limpiar datos en memoria
+            vehicles = [];
+            contracts = [];
+            clients = [];
+            
+            // Ocultar app y mostrar login
+            const appMain = document.getElementById('appMain');
+            const loginContainer = document.getElementById('loginContainer');
+            
+            if (appMain) appMain.style.display = 'none';
+            if (loginContainer) loginContainer.style.display = 'flex';
+            
+            // Forzar recarga de estilos (por si hay problemas de visualización)
+            document.body.style.overflow = 'auto';
+            
+            console.log('✅ Sesión cerrada correctamente');
+        }
+        
+        async function verificarSesion() {
+            const storedToken = localStorage.getItem('authToken');
+            const storedUser = localStorage.getItem('currentUser');
+            
+            if (!storedToken || !storedUser) {
+                return false;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/verify-token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: storedToken })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("RESPUESTA VERIFICACIÓN:", data);
+                    if (data.valid) {
+                        authToken = storedToken;
+                        currentUser = data.usuario || data.user || JSON.parse(storedUser);
+                        return true;
+                    }
+                }
+                
+                return false;
+            } catch (error) {
+                console.error('Error verificando sesión:', error);
+                return false;
+            }
+        }
+        
+        function getAuthHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': authToken
+            };
+        }
+        
+        function isAdmin() {
+            return currentUser && currentUser.role === 'admin';
+        }
+        
+        function actualizarUIporRol() {
+            const adminElements = document.querySelectorAll('.admin-only');
+            
+            if (isAdmin()) {
+                adminElements.forEach(el => el.classList.remove('hidden'));
+                const userRole = document.getElementById('userRole');
+                if (userRole) {
+                    userRole.className = 'user-role admin';
+                    userRole.textContent = 'ADMINISTRADOR';
+                }
+            } else {
+                adminElements.forEach(el => el.classList.add('hidden'));
+                const userRole = document.getElementById('userRole');
+                if (userRole) {
+                    userRole.className = 'user-role empleado';
+                    userRole.textContent = 'EMPLEADO';
+                }
+            }
+            
+            const userName = document.getElementById('userName');
+            if (userName) {
+                userName.textContent = currentUser?.nombre || currentUser?.username || 'Usuario';
+            }
+        }
+        
+        // ============================================
+        // FUNCIONES DE CARGA DE DATOS (CON TOKEN)
+        // ============================================
+        
+        async function loadVehicles() {
+            try {
+                const response = await fetch(`${API_URL}/autos`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logout();
+                        return [];
+                    }
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                vehicles = await response.json();
+                console.log(`✅ ${vehicles.length} vehículos cargados`);
+                return vehicles;
+            } catch (error) {
+                console.error('❌ Error cargando vehículos:', error);
+                showAlert('Error al cargar vehículos', 'error');
+                return [];
+            }
+        }
+        
+        async function loadContracts() {
+            try {
+                const response = await fetch(`${API_URL}/contratos`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logout();
+                        return [];
+                    }
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                contracts = await response.json();
+                console.log(`✅ ${contracts.length} contratos cargados`);
+                return contracts;
+            } catch (error) {
+                console.error('❌ Error cargando contratos:', error);
+                return [];
+            }
+        }
+        
+        async function loadClients() {
+            try {
+                const response = await fetch(`${API_URL}/clientes`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logout();
+                        return [];
+                    }
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                clients = await response.json();
+                console.log(`✅ ${clients.length} clientes cargados`);
+                return clients;
+            } catch (error) {
+                console.error('❌ Error cargando clientes:', error);
+                return [];
+            }
+        }
+        
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`, {
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) return;
+                
+                const stats = await response.json();
+                
+                const statsTotalVehicles = document.getElementById('statsTotalVehicles');
+                const statsAvailableVehicles = document.getElementById('statsAvailableVehicles');
+                const statsRentedVehicles = document.getElementById('statsRentedVehicles');
+                const statsTotalContracts = document.getElementById('statsTotalContracts');
+                const statsActiveContracts = document.getElementById('statsActiveContracts');
+                const statsTotalClients = document.getElementById('statsTotalClients');
+                const statsTotalIncome = document.getElementById('statsTotalIncome');
+                
+                if (statsTotalVehicles) statsTotalVehicles.textContent = stats.totalVehiculos;
+                if (statsAvailableVehicles) statsAvailableVehicles.textContent = stats.vehiculosDisponibles;
+                if (statsRentedVehicles) statsRentedVehicles.textContent = stats.vehiculosRentados;
+                if (statsTotalContracts) statsTotalContracts.textContent = stats.totalContratos;
+                if (statsActiveContracts) statsActiveContracts.textContent = stats.contratosActivos;
+                if (statsTotalClients) statsTotalClients.textContent = stats.totalClientes;
+                if (statsTotalIncome) statsTotalIncome.textContent = `INGRESOS TOTALES: ${formatCurrency(stats.ingresosTotales)}`;
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+            }
+        }
+        
+        async function createVehicle(vehicleData) {
+            try {
+                const response = await fetch(`${API_URL}/autos`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(vehicleData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al crear vehículo');
+                }
+
+                const newVehicle = await response.json();
+                showAlert(`Vehículo ${newVehicle.plates} creado exitosamente`, 'success');
+                return newVehicle;
+
+            } catch (error) {
+                console.error('Error creando vehículo:', error);
+                showAlert(error.message, 'error');
+                return null;
+            }
+        }
+        
+        async function updateVehicleStatus(vehicleId, status) {
+            if (!isAdmin()) {
+                showAlert('No tienes permisos para cambiar el estado del vehículo', 'error');
+                return false;
+            }            
+            try {
+                const response = await fetch(`${API_URL}/autos/${vehicleId}`, {
+                    method: 'PUT',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ status })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al actualizar estado');
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error actualizando estado:', error);
+                showAlert('Error al actualizar estado del vehículo', 'error');
+                return false;
+            }
+        }
+        
+        async function deleteVehicle(vehicleId) {
+            if (!isAdmin()) {
+                showAlert('No tienes permisos para eliminar vehículos', 'error');
+                return false;
+            }
+            
+            if (!confirm('¿Estás seguro de eliminar este vehículo? Esta acción no se puede deshacer.')) {
+                return false;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/autos/${vehicleId}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al eliminar vehículo');
+                }
+                
+                showAlert('✅ Vehículo eliminado correctamente', 'success');
+                return true;
+            } catch (error) {
+                console.error('Error eliminando vehículo:', error);
+                showAlert('Error al eliminar el vehículo', 'error');
+                return false;
+            }
+        }
+        
+        async function saveContract(contractData) {
+            try {
+                const response = await fetch(`${API_URL}/contratos`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(contractData)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al guardar contrato');
+                }
+                
+                const newContract = await response.json();
+                showAlert('✅ Contrato guardado exitosamente', 'success');
+                return newContract;
+            } catch (error) {
+                console.error('Error guardando contrato:', error);
+                showAlert(error.message, 'error');
+                return null;
+            }
+        }
+        
+        async function completeContract(contractId) {
+            try {
+                const response = await fetch(`${API_URL}/contratos/${contractId}/status`, {
+                    method: 'PUT',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ status: 'completed' })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al completar contrato');
+                }
+                
+                showAlert('✅ Contrato marcado como completado', 'success');
+                return true;
+            } catch (error) {
+                console.error('Error completando contrato:', error);
+                showAlert('Error al completar el contrato', 'error');
+                return false;
+            }
+        }
+        
+        // ============================================
+        // FUNCIONES DE UI
+        // ============================================
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 2
+            }).format(amount || 0);
+        }
+        
+        function showAlert(message, type = 'success', alertId = 'contractAlert') {
+            const alertDiv = document.getElementById(alertId);
+            if (alertDiv) {
+                alertDiv.textContent = message;
+                alertDiv.className = `alert alert-${type}`;
+                alertDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    alertDiv.style.display = 'none';
+                }, 4000);
+            }
+            console.log(`📢 ${type.toUpperCase()}: ${message}`);
+        }
+        
+        function generateId(prefix = 'CON') {
+            return `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+        }
+        
+        // ============================================
+        // NAVEGACIÓN
+        // ============================================
+        
+        function showMainMenu() {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+            const mainMenu = document.getElementById('mainMenu');
+            if (mainMenu) mainMenu.style.display = 'grid';
+        }
+        
+        async function showPage(pageId) {
+            const mainMenu = document.getElementById('mainMenu');
+            if (mainMenu) mainMenu.style.display = 'none';
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+            
+            const pageToShow = document.getElementById(pageId + 'Page');
+            if (pageToShow) {
+                pageToShow.classList.add('active');
+                pageToShow.style.display = 'block';
+                
+                switch(pageId) {
+                    case 'contracts':
+                        await loadVehiclesForContract();
+                        setDefaultDates();
+                        updateContractSummary();
+                        break;
+                    case 'vehicles':
+                        await displayVehicles();
+                        break;
+                    case 'history':
+                        await loadHistory();
+                        break;
+                    case 'clients':
+                        await displayClients();
+                        break;
+                    case 'reports':
+                        await loadStats();
+                        break;
+                    case 'print':
+                        await loadContractsForPrint();
+                        break;
+                }
+            }
+        }
+        
+        // ============================================
+        // CONTRATOS
+        // ============================================
+        
+        async function loadVehiclesForContract() {
+            const vehicleSelect = document.getElementById('vehicleSelect');
+            if (!vehicleSelect) return;
+            
+            await loadVehicles();
+            
+            vehicleSelect.innerHTML = '<option value="">Seleccionar vehículo...</option>';
+            
+            const availableVehicles = vehicles.filter(v => v.status === 'available');
+            
+            if (availableVehicles.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = '⚠️ No hay vehículos disponibles';
+                vehicleSelect.appendChild(option);
+                return;
+            }
+            
+            availableVehicles.forEach(vehicle => {
+                const option = document.createElement('option');
+                option.value = vehicle.id;
+                option.textContent = `${vehicle.name} - ${vehicle.plates} (${formatCurrency(vehicle.dailyRate)}/día)`;
+                vehicleSelect.appendChild(option);
+            });
+        }
+        
+        function updateVehicleDetails() {
+            const selectedId = parseInt(document.getElementById('vehicleSelect').value);
+            const vehicle = vehicles.find(v => v.id === selectedId);
+            
+            if (vehicle) {
+                const vehiclePlates = document.getElementById('vehiclePlates');
+                const vehicleBrand = document.getElementById('vehicleBrand');
+                const vehicleModel = document.getElementById('vehicleModel');
+                const vehicleColor = document.getElementById('vehicleColor');
+                const dailyRate = document.getElementById('dailyRate');
+                
+                if (vehiclePlates) vehiclePlates.value = vehicle.plates;
+                if (vehicleBrand) vehicleBrand.value = vehicle.brand;
+                if (vehicleModel) vehicleModel.value = vehicle.model;
+                if (vehicleColor) vehicleColor.value = vehicle.color;
+                if (dailyRate) dailyRate.value = vehicle.dailyRate;
+                updateContractSummary();
+            } else {
+                const vehiclePlates = document.getElementById('vehiclePlates');
+                const vehicleBrand = document.getElementById('vehicleBrand');
+                const vehicleModel = document.getElementById('vehicleModel');
+                const vehicleColor = document.getElementById('vehicleColor');
+                const dailyRate = document.getElementById('dailyRate');
+                
+                if (vehiclePlates) vehiclePlates.value = '';
+                if (vehicleBrand) vehicleBrand.value = '';
+                if (vehicleModel) vehicleModel.value = '';
+                if (vehicleColor) vehicleColor.value = '';
+                if (dailyRate) dailyRate.value = '';
+            }
+        }
+        
+        function setDefaultDates() {
+            const today = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            
+            if (startDate) startDate.value = today.toISOString().split('T')[0];
+            if (endDate) endDate.value = tomorrow.toISOString().split('T')[0];
+            calculateDaysAndHours();
+        }
+        
+        function calculateDaysAndHours() {
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            
+            if (!startDate || !endDate || !startDate.value || !endDate.value) return;
+            
+            const start = new Date(startDate.value);
+            const end = new Date(endDate.value);
+            const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            
+            const totalDays = document.getElementById('totalDays');
+            if (totalDays) totalDays.value = diffDays > 0 ? diffDays : 1;
+            updateContractSummary();
+        }
+        
+        function updateContractSummary() {
+            const dailyRateInput = document.getElementById('dailyRate');
+            const totalDaysInput = document.getElementById('totalDays');
+            const cashDepositInput = document.getElementById('cashDeposit');
+            const ivaOptionSelect = document.getElementById('ivaOption');
+            
+            const dailyRate = dailyRateInput ? parseFloat(dailyRateInput.value) || 0 : 0;
+            const days = totalDaysInput ? parseInt(totalDaysInput.value) || 1 : 1;
+            const deposit = cashDepositInput ? parseFloat(cashDepositInput.value) || 500 : 500;
+            const includeIVA = ivaOptionSelect ? ivaOptionSelect.value === 'with' : true;
+            
+            let subtotal = dailyRate * days;
+            let iva = includeIVA ? subtotal * 0.16 : 0;
+            let total = subtotal + iva + deposit;
+            
+            const summaryRent = document.getElementById('summaryRent');
+            const summaryIVA = document.getElementById('summaryIVA');
+            const summaryDeposit = document.getElementById('summaryDeposit');
+            const summaryTotal = document.getElementById('summaryTotal');
+            const totalCalculado = document.getElementById('totalCalculado');
+            
+            if (summaryRent) summaryRent.textContent = formatCurrency(subtotal);
+            if (summaryIVA) summaryIVA.textContent = formatCurrency(iva);
+            if (summaryDeposit) summaryDeposit.textContent = formatCurrency(deposit);
+            if (summaryTotal) summaryTotal.textContent = `TOTAL: ${formatCurrency(total)}`;
+            if (totalCalculado) totalCalculado.textContent = formatCurrency(total);
+        }
+        
+        function getContractFormData() {
+            const selectedVehicleId = parseInt(document.getElementById('vehicleSelect').value);
+            const vehicle = vehicles.find(v => v.id === selectedVehicleId);
+            
+            const subtotalText = document.getElementById('summaryRent')?.textContent || '$0.00';
+            const ivaText = document.getElementById('summaryIVA')?.textContent || '$0.00';
+            const depositText = document.getElementById('summaryDeposit')?.textContent || '$500.00';
+            
+            const subtotal = parseFloat(subtotalText.replace(/[^0-9.-]+/g, '')) || 0;
+            const iva = parseFloat(ivaText.replace(/[^0-9.-]+/g, '')) || 0;
+            const deposit = parseFloat(depositText.replace(/[^0-9.-]+/g, '')) || 0;
+            const total = subtotal + iva + deposit;
+            
+            return {
+                clientName: document.getElementById('clientName')?.value || '',
+                clientRFC: document.getElementById('clientRFC')?.value.toUpperCase() || '',
+                clientAddress: document.getElementById('clientAddress')?.value || '',
+                clientPhone: document.getElementById('clientPhone')?.value || '',
+                clientEmail: document.getElementById('clientEmail')?.value || '',
+                clientLicense: document.getElementById('clientLicense')?.value || '',
+                startDate: document.getElementById('startDate')?.value || '',
+                startTime: document.getElementById('startTime')?.value || '09:00',
+                endDate: document.getElementById('endDate')?.value || '',
+                endTime: document.getElementById('endTime')?.value || '09:00',
+                totalDays: parseInt(document.getElementById('totalDays')?.value) || 1,
+                vehicleId: selectedVehicleId,
+                vehiclePlates: vehicle?.plates || '',
+                vehicleBrand: vehicle?.brand || '',
+                vehicleModel: vehicle?.model || '',
+                vehicleColor: vehicle?.color || '',
+                dailyRate: parseFloat(document.getElementById('dailyRate')?.value) || 0,
+                kmStart: parseInt(document.getElementById('kmStart')?.value) || 0,
+                deposit: deposit,
+                ivaOption: document.getElementById('ivaOption')?.value || 'with',
+                subtotal: subtotal,
+                iva: iva,
+                total: total,
+                createdAt: new Date().toISOString(),
+                status: 'active'
+            };
+        }
+        
+        function validateContractForm() {
+            const required = ['clientName', 'clientRFC', 'clientAddress', 'clientPhone', 'vehicleSelect'];
+            for (const field of required) {
+                const element = document.getElementById(field);
+                const value = element ? element.value : '';
+                if (!value) {
+                    showAlert(`El campo ${field} es requerido`, 'error');
+                    return false;
+                }
+            }
+            
+            const rfcElement = document.getElementById('clientRFC');
+            const rfc = rfcElement ? rfcElement.value : '';
+            if (rfc.length < 12) {
+                showAlert('RFC inválido', 'error');
+                return false;
+            }
+            
+            const vehicleSelect = document.getElementById('vehicleSelect');
+            if (!vehicleSelect || !vehicleSelect.value) {
+                showAlert('Debes seleccionar un vehículo', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        async function handleSaveContract() {
+            if (!validateContractForm()) return;
+            
+            const contractData = getContractFormData();
+            const result = await saveContract(contractData);
+            
+            if (result) {
+                // Resetear formulario
+                const clientName = document.getElementById('clientName');
+                const clientRFC = document.getElementById('clientRFC');
+                const clientAddress = document.getElementById('clientAddress');
+                const clientPhone = document.getElementById('clientPhone');
+                const clientEmail = document.getElementById('clientEmail');
+                const clientLicense = document.getElementById('clientLicense');
+                const kmStart = document.getElementById('kmStart');
+                const cashDeposit = document.getElementById('cashDeposit');
+                const vehicleSelect = document.getElementById('vehicleSelect');
+                
+                if (clientName) clientName.value = '';
+                if (clientRFC) clientRFC.value = '';
+                if (clientAddress) clientAddress.value = '';
+                if (clientPhone) clientPhone.value = '';
+                if (clientEmail) clientEmail.value = '';
+                if (clientLicense) clientLicense.value = '';
+                if (kmStart) kmStart.value = '0';
+                if (cashDeposit) cashDeposit.value = '500';
+                if (vehicleSelect) vehicleSelect.value = '';
+                
+                resetVehicleDetails();
+                setDefaultDates();
+                updateContractSummary();
+                
+                // Recargar datos
+                await loadVehicles();
+                await loadContracts();
+            }
+        }
+        
+        function resetVehicleDetails() {
+            const vehiclePlates = document.getElementById('vehiclePlates');
+            const vehicleBrand = document.getElementById('vehicleBrand');
+            const vehicleModel = document.getElementById('vehicleModel');
+            const vehicleColor = document.getElementById('vehicleColor');
+            const dailyRate = document.getElementById('dailyRate');
+            
+            if (vehiclePlates) vehiclePlates.value = '';
+            if (vehicleBrand) vehicleBrand.value = '';
+            if (vehicleModel) vehicleModel.value = '';
+            if (vehicleColor) vehicleColor.value = '';
+            if (dailyRate) dailyRate.value = '';
+        }
+        
+        // ============================================
+        // VEHÍCULOS
+        // ============================================
+        
+        async function displayVehicles() {
+            const container = document.getElementById('vehiclesList');
+            if (!container) return;
+            
+            await loadVehicles();
+            
+            const searchVehicle = document.getElementById('searchVehicle');
+            const filterStatus = document.getElementById('filterStatus');
+            
+            const searchTerm = searchVehicle ? searchVehicle.value.toLowerCase() : '';
+            const statusFilter = filterStatus ? filterStatus.value : 'all';
+            
+            let filtered = vehicles;
+            if (searchTerm) {
+                filtered = filtered.filter(v => 
+                    v.plates.toLowerCase().includes(searchTerm) ||
+                    v.name.toLowerCase().includes(searchTerm) ||
+                    v.brand.toLowerCase().includes(searchTerm)
+                );
+            }
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(v => v.status === statusFilter);
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 3em;">🚗</div>
+                        <h3>No hay vehículos registrados</h3>
+                        ${isAdmin() ? '<button class="btn btn-primary" onclick="openCreateVehicleModal()">➕ REGISTRAR VEHÍCULO</button>' : ''}
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            filtered.forEach(vehicle => {
+                const statusColor = vehicle.status === 'available' ? '#10b981' : '#f05252';
+                const statusText = vehicle.status === 'available' ? 'DISPONIBLE' : 'RENTADO';
+                const statusBg = vehicle.status === 'available' ? '#d1fae5' : '#fee2e2';
+                
+                const card = document.createElement('div');
+                card.className = 'vehicle-card';
+                card.innerHTML = `
+                    <div class="vehicle-header">
+                        <div class="vehicle-name">${vehicle.name}</div>
+                        <div class="vehicle-plates">${vehicle.plates}</div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <span style="background: ${statusBg}; color: ${statusColor}; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold;">
+                            ${statusText}
+                        </span>
+                        <span style="background: #e0f2fe; color: #1a56db; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; margin-left: 8px;">
+                            ${vehicle.brand} ${vehicle.model}
+                        </span>
+                    </div>
+                    <div class="vehicle-info-grid">
+                        <div class="info-group">
+                            <div class="info-label">Color</div>
+                            <div class="info-value">${vehicle.color}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Tarifa Diaria</div>
+                            <div class="info-value">${formatCurrency(vehicle.dailyRate)}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Kilometraje</div>
+                            <div class="info-value">${vehicle.currentMileage?.toLocaleString() || 0} km</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="selectVehicleForRent(${vehicle.id})" 
+                                ${vehicle.status !== 'available' ? 'disabled' : ''}
+                                style="flex: 1;">
+                            🚗 SELECCIONAR
+                        </button>
+                        ${isAdmin() ? `
+                            <button class="btn btn-warning" onclick="toggleVehicleStatus(${vehicle.id})" style="padding: 10px 20px;">
+                                ${vehicle.status === 'available' ? '🚫 RENTAR' : '✅ DISPONIBLE'}
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteVehicleById(${vehicle.id})" style="padding: 10px 20px;">
+                                🗑️ ELIMINAR
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        async function toggleVehicleStatus(vehicleId) {
+            const vehicle = vehicles.find(v => v.id === vehicleId);
+            if (!vehicle) return;
+            
+            const newStatus = vehicle.status === 'available' ? 'rented' : 'available';
+            const success = await updateVehicleStatus(vehicleId, newStatus);
+            
+            if (success) {
+                await displayVehicles();
+                await loadVehiclesForContract();
+            }
+        }
+        
+        async function deleteVehicleById(vehicleId) {
+            const success = await deleteVehicle(vehicleId);
+            if (success) {
+                await displayVehicles();
+                await loadVehiclesForContract();
+            }
+        }
+        
+        function selectVehicleForRent(vehicleId) {
+            const vehicle = vehicles.find(v => v.id === vehicleId);
+            if (!vehicle || vehicle.status !== 'available') {
+                showAlert('Este vehículo no está disponible', 'error');
+                return;
+            }
+            
+            showPage('contracts');
+            setTimeout(() => {
+                const select = document.getElementById('vehicleSelect');
+                if (select) {
+                    select.value = vehicleId;
+                    updateVehicleDetails();
+                }
+            }, 100);
+        }
+        
+        function openCreateVehicleModal() {
+            if (!isAdmin()) {
+                showAlert('No tienes permisos para crear vehículos', 'error');
+                return;
+            }
+            const modal = document.getElementById('createVehicleModal');
+            if (modal) modal.classList.add('active');
+            
+            const newVehicleName = document.getElementById('newVehicleName');
+            const newVehicleBrand = document.getElementById('newVehicleBrand');
+            const newVehicleModel = document.getElementById('newVehicleModel');
+            const newVehiclePlates = document.getElementById('newVehiclePlates');
+            const newVehicleColor = document.getElementById('newVehicleColor');
+            const newVehicleDailyRate = document.getElementById('newVehicleDailyRate');
+            const newVehicleMileage = document.getElementById('newVehicleMileage');
+            
+            if (newVehicleName) newVehicleName.value = '';
+            if (newVehicleBrand) newVehicleBrand.value = '';
+            if (newVehicleModel) newVehicleModel.value = '';
+            if (newVehiclePlates) newVehiclePlates.value = '';
+            if (newVehicleColor) newVehicleColor.value = '';
+            if (newVehicleDailyRate) newVehicleDailyRate.value = '800';
+            if (newVehicleMileage) newVehicleMileage.value = '0';
+        }
+        
+        function closeCreateVehicleModal() {
+            const modal = document.getElementById('createVehicleModal');
+            if (modal) modal.classList.remove('active');
+        }
+        
+        async function createNewVehicle() {
+            const newVehicleName = document.getElementById('newVehicleName');
+            const newVehicleBrand = document.getElementById('newVehicleBrand');
+            const newVehicleModel = document.getElementById('newVehicleModel');
+            const newVehiclePlates = document.getElementById('newVehiclePlates');
+            const newVehicleColor = document.getElementById('newVehicleColor');
+            const newVehicleDailyRate = document.getElementById('newVehicleDailyRate');
+            const newVehicleMileage = document.getElementById('newVehicleMileage');
+            
+            const vehicleData = {
+                name: newVehicleName ? newVehicleName.value : '',
+                brand: newVehicleBrand ? newVehicleBrand.value : '',
+                model: newVehicleModel ? newVehicleModel.value : '',
+                plates: newVehiclePlates ? newVehiclePlates.value.toUpperCase() : '',
+                color: newVehicleColor ? newVehicleColor.value : '',
+                dailyRate: parseFloat(newVehicleDailyRate ? newVehicleDailyRate.value : '800') || 800,
+                currentMileage: parseInt(newVehicleMileage ? newVehicleMileage.value : '0') || 0
+            };
+            
+            if (!vehicleData.name || !vehicleData.brand || !vehicleData.model || !vehicleData.plates || !vehicleData.color) {
+                showModalAlert('Todos los campos son requeridos', 'error');
+                return;
+            }
+            
+            const result = await createVehicle(vehicleData);
+            if (result) {
+                closeCreateVehicleModal();
+                await displayVehicles();
+                await loadVehiclesForContract();
+            }
+        }
+        
+        function showModalAlert(message, type) {
+            const alertDiv = document.getElementById('modalAlert');
+            if (alertDiv) {
+                alertDiv.textContent = message;
+                alertDiv.className = `alert alert-${type}`;
+                alertDiv.style.display = 'block';
+                setTimeout(() => {
+                    alertDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // ============================================
+        // HISTORIAL
+        // ============================================
+        
+        async function loadHistory() {
+            const container = document.getElementById('historyContent');
+            if (!container) return;
+            
+            await loadContracts();
+            
+            const searchHistory = document.getElementById('searchHistory');
+            const filterHistory = document.getElementById('filterHistory');
+            
+            const searchTerm = searchHistory ? searchHistory.value.toLowerCase() : '';
+            const statusFilter = filterHistory ? filterHistory.value : 'all';
+            
+            let filtered = contracts;
+            if (searchTerm) {
+                filtered = filtered.filter(c => 
+                    c.clientName.toLowerCase().includes(searchTerm) ||
+                    c.clientRFC.toLowerCase().includes(searchTerm) ||
+                    c.vehiclePlates.toLowerCase().includes(searchTerm)
+                );
+            }
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(c => c.status === statusFilter);
+            }
+            
+            filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 3em;">📊</div>
+                        <h3>No hay contratos registrados</h3>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            filtered.forEach(contract => {
+                const statusColor = contract.status === 'active' ? '#10b981' : '#3b82f6';
+                const statusText = contract.status === 'active' ? 'ACTIVO' : 'COMPLETADO';
+                
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.innerHTML = `
+                    <div class="client-header">
+                        <div class="client-name">${contract.clientName}</div>
+                        <div class="client-number">${contract.id}</div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <span style="background: #dbeafe; color: #1a56db; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">
+                            📋 ${contract.clientRFC}
+                        </span>
+                        <span style="background: #f0f9ff; color: #1a56db; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; margin-left: 8px;">
+                            🚗 ${contract.vehiclePlates}
+                        </span>
+                        <span style="background: ${statusColor}; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; margin-left: 8px;">
+                            ${statusText}
+                        </span>
+                    </div>
+                    <div style="color: #666; font-size: 0.9em; margin-bottom: 10px;">
+                        <div><strong>Periodo:</strong> ${new Date(contract.startDate).toLocaleDateString()} - ${new Date(contract.endDate).toLocaleDateString()}</div>
+                        <div><strong>Total:</strong> ${formatCurrency(contract.total)}</div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="viewContractDetails(${contract.id})" style="padding: 8px 15px;">
+                            👁️ VER
+                        </button>
+                        ${contract.status === 'active' && isAdmin() ? `
+                            <button class="btn btn-success" onclick="handleCompleteContract(${contract.id})" style="padding: 8px 15px;">
+                                ✅ COMPLETAR
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        async function handleCompleteContract(contractId) {
+            const success = await completeContract(contractId);
+            if (success) {
+                await loadHistory();
+                await loadVehicles();
+                await loadVehiclesForContract();
+            }
+        }
+        
+        function viewContractDetails(contractId) {
+            const contract = contracts.find(c => c.id === contractId);
+            if (contract) {
+                showPrintPreview(contract);
+            }
+        }
+        
+        // ============================================
+        // IMPRESIÓN
+        // ============================================
+        
+        async function loadContractsForPrint() {
+            const container = document.getElementById('printContractsList');
+            if (!container) return;
+            
+            await loadContracts();
+            
+            const searchPrint = document.getElementById('searchPrint');
+            const searchTerm = searchPrint ? searchPrint.value.toLowerCase() : '';
+            
+            let filtered = contracts;
+            if (searchTerm) {
+                filtered = filtered.filter(c => 
+                    c.clientName.toLowerCase().includes(searchTerm) ||
+                    c.clientRFC.toLowerCase().includes(searchTerm) ||
+                    c.vehiclePlates.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 3em;">🖨️</div>
+                        <h3>No hay contratos para imprimir</h3>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            filtered.forEach(contract => {
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.style.cursor = 'pointer';
+                card.onclick = () => showPrintPreview(contract);
+                card.innerHTML = `
+                    <div class="client-header">
+                        <div class="client-name">${contract.clientName}</div>
+                        <div class="client-number">${contract.id}</div>
+                    </div>
+                    <div style="margin-bottom: 5px;">
+                        <span style="background: #dbeafe; color: #1a56db; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">
+                            📋 ${contract.clientRFC}
+                        </span>
+                        <span style="background: #f0f9ff; color: #1a56db; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; margin-left: 8px;">
+                            🚗 ${contract.vehiclePlates}
+                        </span>
+                    </div>
+                    <div><strong>Periodo:</strong> ${new Date(contract.startDate).toLocaleDateString()} - ${new Date(contract.endDate).toLocaleDateString()}</div>
+                    <div><strong>Total:</strong> ${formatCurrency(contract.total)}</div>
+                    <div style="margin-top: 10px; color: #1a56db; text-align: center;">🖨️ HAZ CLICK PARA IMPRIMIR</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function generateContractPrintHTML(c) {
+            const startDateFormatted = c.startDate ? new Date(c.startDate).toLocaleDateString('es-MX') : 'No especificada';
+            const endDateFormatted = c.endDate ? new Date(c.endDate).toLocaleDateString('es-MX') : 'No especificada';
+            const startTimeFormatted = c.startTime || '09:00';
+            const endTimeFormatted = c.endTime || '09:00';
+            
+            return `
+                <div style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; padding: 20px; color: #000000; max-width: 800px; margin: 0 auto;">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <h2 style="margin: 0 0 5px 0; font-size: 18px;">GRUPO SEPROFACIL S.A. DE C.V.</h2>
+                        <h3 style="margin: 0; font-size: 14px;">CONTRATO DE ARRENDAMIENTO DE VEHÍCULO</h3>
+                        <p style="margin: 8px 0 0 0; font-size: 11px;">Folio: ${c.id || 'N/A'} | Fecha: ${new Date(c.createdAt || Date.now()).toLocaleDateString('es-MX')}</p>
+                    </div>
+                    
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
+                        <tr style="background-color: #f0f0f0;">
+                            <td colspan="3" style="padding: 6px;"><b>1.- EL CLIENTE</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px; width: 33%;"><b>Nombre:</b> ${c.clientName || 'N/A'}</td>
+                            <td style="padding: 6px; width: 33%;"><b>Teléfono:</b> ${c.clientPhone || 'N/A'}</td>
+                            <td style="padding: 6px; width: 34%;"><b>Licencia:</b> ${c.clientLicense || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="padding: 6px;"><b>Domicilio:</b> ${c.clientAddress || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px;"><b>RFC:</b> ${c.clientRFC || 'N/A'}</td>
+                            <td style="padding: 6px;"><b>Email:</b> ${c.clientEmail || 'N/A'}</td>
+                        </tr>
+                    </table>
+                    
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
+                        <tr style="background-color: #f0f0f0;">
+                            <td colspan="2" style="padding: 6px;"><b>3.- VIGENCIA DEL CONTRATO</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px; width: 50%;"><b>Fecha y Hora de Inicio:</b> ${startDateFormatted} ${startTimeFormatted} hrs</td>
+                            <td style="padding: 6px; width: 50%;"><b>Fecha y Hora de Término:</b> ${endDateFormatted} ${endTimeFormatted} hrs</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px;"><b>Total de Días:</b> ${c.totalDays || 1} día(s)</td>
+                        </tr>
+                    </table>
+                    
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
+                        <tr style="background-color: #f0f0f0;">
+                            <td colspan="3" style="padding: 6px;"><b>4.- VEHÍCULO</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px; width: 33%;"><b>Vehículo:</b> ${c.vehicleBrand || ''} ${c.vehicleModel || ''}</td>
+                            <td style="padding: 6px; width: 33%;"><b>Placas:</b> ${c.vehiclePlates || 'N/A'}</td>
+                            <td style="padding: 6px; width: 34%;"><b>Color:</b> ${c.vehicleColor || 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px;"><b>Kilometraje Inicial:</b> ${(c.kmStart || 0).toLocaleString()} km</td>
+                            <td style="padding: 6px;"><b>Tarifa por Día:</b> ${formatCurrency(c.dailyRate || 0)}</td>
+                        </tr>
+                    </table>
+                    
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11px;">
+                        <tr style="background-color: #f0f0f0;">
+                            <td colspan="3" style="padding: 6px;"><b>DETALLE DE COSTOS</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px; text-align: center; width: 33%;"><b>Concepto</b></td>
+                            <td style="padding: 6px; text-align: center; width: 33%;"><b>Días</b></td>
+                            <td style="padding: 6px; text-align: center; width: 34%;"><b>Importe</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px;">Renta de vehículo (${formatCurrency(c.dailyRate || 0)}/día)</td>
+                            <td style="padding: 6px; text-align: center;">${c.totalDays || 1}</td>
+                            <td style="padding: 6px; text-align: right;">${formatCurrency(c.subtotal || 0)}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px; text-align: right;"><b>Subtotal:</b></td>
+                            <td style="padding: 6px; text-align: right;">${formatCurrency(c.subtotal || 0)}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px; text-align: right;"><b>IVA (16%):</b></td>
+                            <td style="padding: 6px; text-align: right;">${formatCurrency(c.iva || 0)}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px; text-align: right;"><b>Depósito de Garantía:</b></td>
+                            <td style="padding: 6px; text-align: right;">${formatCurrency(c.deposit || 0)}</td>
+                        </tr>
+                        <tr style="background-color: #e8f0fe;">
+                            <td colspan="2" style="padding: 6px; text-align: right;"><b>TOTAL DEL CONTRATO:</b></td>
+                            <td style="padding: 6px; text-align: right;"><b>${formatCurrency(c.total || 0)}</b></td>
+                        </tr>
+                    </table>
+                    
+                    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 10px;">
+                        <tr style="background-color: #f0f0f0;">
+                            <td style="padding: 6px;"><b>CLÁUSULAS IMPORTANTES</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px;">
+                                1. El vehículo deberá ser devuelto en las mismas condiciones de limpieza y funcionamiento.<br>
+                                2. El depósito de garantía será reembolsado al término del contrato sin daños al vehículo.<br>
+                                3. El cliente se obliga a respetar las leyes de tránsito aplicables.<br>
+                                4. Cualquier multa o infracción será responsabilidad del cliente.
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                        <div style="text-align: center; width: 45%;">
+                            <div style="border-top: 1px solid #000; padding-top: 5px; margin-top: 30px;">
+                                <b>FIRMA DEL CLIENTE</b>
+                            </div>
+                            <div style="margin-top: 5px; font-size: 10px;">${c.clientName || '_________________'}</div>
+                        </div>
+                        <div style="text-align: center; width: 45%;">
+                            <div style="border-top: 1px solid #000; padding-top: 5px; margin-top: 30px;">
+                                <b>GRUPO SEPROFACIL S.A. DE C.V.</b>
+                            </div>
+                            <div style="margin-top: 5px; font-size: 10px;">RECIBÍ CONFORME</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center; font-size: 9px; color: #666;">
+                        Este documento es un comprobante de arrendamiento válido. Conservarlo para cualquier aclaración.
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showPrintPreview(contract) {
+            const overlay = document.createElement('div');
+            overlay.className = 'print-overlay';
+            overlay.innerHTML = `
+                <div class="print-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="color: #1a56db;">VISTA PREVIA DEL CONTRATO</h2>
+                        <button onclick="closePrintPreview()" style="background: none; border: none; font-size: 1.5em; cursor: pointer;">×</button>
+                    </div>
+                    <div id="printPreviewContent">
+                        ${generateContractPrintHTML(contract)}
+                    </div>
+                    <div class="print-controls">
+                        <button class="btn btn-success" onclick="printContract(${JSON.stringify(contract).replace(/"/g, '&quot;')})">
+                            🖨️ IMPRIMIR
+                        </button>
+                        <button class="btn btn-warning" onclick="closePrintPreview()">
+                            ❌ CERRAR
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closePrintPreview() {
+            const overlay = document.querySelector('.print-overlay');
+            if (overlay) overlay.remove();
+            document.body.style.overflow = 'auto';
+        }
+        
+        function printContract(contract) {
+            closePrintPreview();
+            const printWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+            if (!printWindow) {
+                showAlert('Por favor permita ventanas emergentes para imprimir', 'error');
+                return;
+            }
+            
+            const contractHTML = generateContractPrintHTML(contract);
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Contrato Arrendamiento ${contract.id}</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
+                        body {
+                            font-family: Arial, Helvetica, sans-serif;
+                            padding: 20px;
+                            background: white;
+                        }
+                        @media print {
+                            body {
+                                padding: 0;
+                                margin: 0;
+                            }
+                            .no-print {
+                                display: none;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${contractHTML}
+                    <div class="no-print" style="text-align: center; margin-top: 20px; padding: 10px;">
+                        <button onclick="window.print();" style="padding: 8px 20px; margin: 5px; background: #1a56db; color: white; border: none; border-radius: 5px; cursor: pointer;">🖨️ Imprimir</button>
+                        <button onclick="window.close();" style="padding: 8px 20px; margin: 5px; background: #6b7280; color: white; border: none; border-radius: 5px; cursor: pointer;">❌ Cerrar</button>
+                    </div>
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+        
+        // ============================================
+        // CLIENTES
+        // ============================================
+        
+        async function displayClients() {
+            const container = document.getElementById('clientsContent');
+            if (!container) return;
+            
+            await loadClients();
+            
+            const searchClient = document.getElementById('searchClient');
+            const searchTerm = searchClient ? searchClient.value.toLowerCase() : '';
+            
+            let filtered = clients;
+            if (searchTerm) {
+                filtered = filtered.filter(c => 
+                    c.name.toLowerCase().includes(searchTerm) ||
+                    c.rfc.toLowerCase().includes(searchTerm) ||
+                    c.phone.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 3em;">👥</div>
+                        <h3>No hay clientes registrados</h3>
+                        <p>Los clientes se registran automáticamente al crear contratos</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            filtered.forEach(client => {
+                const clientContracts = contracts.filter(c => c.clientRFC === client.rfc);
+                const totalSpent = clientContracts.reduce((sum, c) => sum + (c.total || 0), 0);
+                
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.innerHTML = `
+                    <div class="client-header">
+                        <div class="client-name">${client.name}</div>
+                        <span style="background: #dbeafe; color: #1a56db; padding: 3px 10px; border-radius: 12px; font-size: 0.8em;">
+                            ${client.rfc}
+                        </span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <div><strong>Teléfono:</strong> ${client.phone}</div>
+                        <div><strong>Email:</strong> ${client.email || 'No especificado'}</div>
+                        <div><strong>Dirección:</strong> ${client.address || 'No especificada'}</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="background: #f0f9ff; padding: 5px 12px; border-radius: 15px;">
+                            📊 ${clientContracts.length} contratos | 💰 ${formatCurrency(totalSpent)}
+                        </span>
+                        <button class="btn btn-primary" onclick="selectClientForContract('${client.rfc}')" style="padding: 8px 15px;">
+                            🚗 NUEVA RENTA
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function selectClientForContract(rfc) {
+            const client = clients.find(c => c.rfc === rfc);
+            if (client) {
+                showPage('contracts');
+                setTimeout(() => {
+                    const clientName = document.getElementById('clientName');
+                    const clientRFC = document.getElementById('clientRFC');
+                    const clientAddress = document.getElementById('clientAddress');
+                    const clientPhone = document.getElementById('clientPhone');
+                    const clientEmail = document.getElementById('clientEmail');
+                    
+                    if (clientName) clientName.value = client.name;
+                    if (clientRFC) clientRFC.value = client.rfc;
+                    if (clientAddress) clientAddress.value = client.address || '';
+                    if (clientPhone) clientPhone.value = client.phone;
+                    if (clientEmail) clientEmail.value = client.email || '';
+                }, 100);
+            }
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        
+        async function initApp() {
+            // Configurar event listeners del login
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const usernameInput = document.getElementById('loginUsername');
+                    const passwordInput = document.getElementById('loginPassword');
+                    const loginError = document.getElementById('loginError');
+                    const errorMessage = document.getElementById('errorMessage');
+                    
+                    const username = usernameInput ? usernameInput.value.trim() : '';
+                    const password = passwordInput ? passwordInput.value : '';
+                    
+                    // Validar campos vacíos
+                    if (!username || !password) {
+                        if (errorMessage) errorMessage.textContent = 'Por favor ingrese usuario y contraseña';
+                        if (loginError) loginError.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Mostrar loading en el botón
+                    const loginBtn = document.getElementById('loginBtn');
+                    const originalText = loginBtn ? loginBtn.innerHTML : '';
+                    if (loginBtn) {
+                        loginBtn.innerHTML = '<span class="loading"></span> Verificando...';
+                        loginBtn.disabled = true;
+                    }
+                    
+                    const result = await login(username, password);
+                    
+                    // Restaurar botón
+                    if (loginBtn) {
+                        loginBtn.innerHTML = originalText;
+                        loginBtn.disabled = false;
+                    }
+                    
+                    if (result.success) {
+                        // Ocultar error si estaba visible
+                        if (loginError) loginError.style.display = 'none';
+                        
+                        // Cambiar vista
+                        const loginContainer = document.getElementById('loginContainer');
+                        const appMain = document.getElementById('appMain');
+                        
+                        if (loginContainer) loginContainer.style.display = 'none';
+                        if (appMain) appMain.style.display = 'block';
+                        
+                        // Actualizar UI según rol
+                        actualizarUIporRol();
+                        
+                        // Cargar datos
+                        await loadVehicles();
+                        await loadContracts();
+                        await loadClients();
+                        
+                        // Mostrar menú principal
+                        showMainMenu();
+                    } else {
+                        // Mostrar error
+                        if (errorMessage) errorMessage.textContent = result.error;
+                        if (loginError) loginError.style.display = 'block';
+                    }
+                });
+            }
+            
+            // Botón de logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.addEventListener('click', logout);
+            
+            // Eventos de navegación
+            document.querySelectorAll('.menu-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const page = card.getAttribute('data-page');
+                    if (page) showPage(page);
+                });
+            });
+            
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                btn.addEventListener('click', showMainMenu);
+            });
+            
+            // Eventos de formularios
+            const vehicleSelect = document.getElementById('vehicleSelect');
+            if (vehicleSelect) vehicleSelect.addEventListener('change', updateVehicleDetails);
+            
+            const startDate = document.getElementById('startDate');
+            if (startDate) startDate.addEventListener('change', calculateDaysAndHours);
+            
+            const endDate = document.getElementById('endDate');
+            if (endDate) endDate.addEventListener('change', calculateDaysAndHours);
+            
+            const cashDeposit = document.getElementById('cashDeposit');
+            if (cashDeposit) cashDeposit.addEventListener('input', updateContractSummary);
+            
+            const ivaOption = document.getElementById('ivaOption');
+            if (ivaOption) ivaOption.addEventListener('change', updateContractSummary);
+            
+            const saveContractBtn = document.getElementById('saveContractBtn');
+            if (saveContractBtn) saveContractBtn.addEventListener('click', handleSaveContract);
+            
+            // Eventos de búsqueda
+            const searchVehicleBtn = document.getElementById('searchVehicleBtn');
+            if (searchVehicleBtn) searchVehicleBtn.addEventListener('click', displayVehicles);
+            
+            const searchVehicle = document.getElementById('searchVehicle');
+            if (searchVehicle) searchVehicle.addEventListener('input', displayVehicles);
+            
+            const filterStatus = document.getElementById('filterStatus');
+            if (filterStatus) filterStatus.addEventListener('change', displayVehicles);
+            
+            const searchHistory = document.getElementById('searchHistory');
+            if (searchHistory) searchHistory.addEventListener('input', loadHistory);
+            
+            const filterHistory = document.getElementById('filterHistory');
+            if (filterHistory) filterHistory.addEventListener('change', loadHistory);
+            
+            const searchPrint = document.getElementById('searchPrint');
+            if (searchPrint) searchPrint.addEventListener('input', loadContractsForPrint);
+            
+            const searchClient = document.getElementById('searchClient');
+            if (searchClient) searchClient.addEventListener('input', displayClients);
+            
+            // Botones de admin
+            const createVehicleBtn = document.getElementById('createVehicleBtn');
+            if (createVehicleBtn) createVehicleBtn.addEventListener('click', openCreateVehicleModal);
+            
+            const confirmCreateVehicleBtn = document.getElementById('confirmCreateVehicleBtn');
+            if (confirmCreateVehicleBtn) confirmCreateVehicleBtn.addEventListener('click', createNewVehicle);
+            
+            // Verificar sesión existente SOLO al cargar la página
+            const hasSession = await verificarSesion();
+            if (hasSession && currentUser) {
+                const loginContainer = document.getElementById('loginContainer');
+                const appMain = document.getElementById('appMain');
+                
+                if (loginContainer) loginContainer.style.display = 'none';
+                if (appMain) appMain.style.display = 'block';
+                
+                actualizarUIporRol();
+                await loadVehicles();
+                await loadContracts();
+                await loadClients();
+                showMainMenu();
+            } else {
+                // Asegurar que el login esté visible
+                const loginContainer = document.getElementById('loginContainer');
+                const appMain = document.getElementById('appMain');
+                
+                if (loginContainer) loginContainer.style.display = 'flex';
+                if (appMain) appMain.style.display = 'none';
+                
+                // Limpiar cualquier estado residual
+                authToken = null;
+                currentUser = null;
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+            }
+        }
+        
+        // Exponer funciones globales
+        window.selectVehicleForRent = selectVehicleForRent;
+        window.toggleVehicleStatus = toggleVehicleStatus;
+        window.deleteVehicleById = deleteVehicleById;
+        window.openCreateVehicleModal = openCreateVehicleModal;
+        window.closeCreateVehicleModal = closeCreateVehicleModal;
+        window.createNewVehicle = createNewVehicle;
+        window.handleCompleteContract = handleCompleteContract;
+        window.viewContractDetails = viewContractDetails;
+        window.selectClientForContract = selectClientForContract;
+        window.showPrintPreview = showPrintPreview;
+        window.closePrintPreview = closePrintPreview;
+        window.printContract = printContract;
+        window.formatCurrency = formatCurrency;
+        
+        // Iniciar
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
