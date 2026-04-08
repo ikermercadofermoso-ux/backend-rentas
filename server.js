@@ -8,8 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const { PDFDocument, StandardFonts } = require('pdf-lib');
 
 const app = express();
-const PORT = 3000;
-
+const PORT = process.env.PORT || 3000;
 // ============================================
 // MIDDLEWARE
 // ============================================
@@ -283,7 +282,7 @@ app.get('/contracts/:file', authMiddleware, (req, res) => {
 // ============================================
 
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`🔥 Servidor corriendo en puerto ${PORT}`);
     console.log(`📝 Credenciales:`);
     console.log(`   👑 admin / 654321`);
     console.log(`   👤 empleado / 123456`);
