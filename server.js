@@ -281,6 +281,9 @@ app.get('/contracts/:file', authMiddleware, (req, res) => {
 // START
 // ============================================
 
+app.get('/', (req, res) => {
+    res.send('🚀 Backend de CRONIC funcionando correctamente');
+});
 app.listen(PORT, () => {
     console.log(`🔥 Servidor corriendo en puerto ${PORT}`);
     console.log(`📝 Credenciales:`);
