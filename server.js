@@ -16,7 +16,6 @@ mongoose.connect(process.env.MONGO_URI)
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { PDFDocument, StandardFonts } = require('pdf-lib');
-const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
